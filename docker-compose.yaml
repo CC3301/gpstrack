@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - "8086:8086"
+    restart: unless-stopped
+  
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  track:
+    build: ./track
+    restart: unless-stopped
