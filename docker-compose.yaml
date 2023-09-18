@@ -5,13 +5,27 @@ services:
     ports:
       - "8086:8086"
     restart: unless-stopped
+    volumes:
+      - influxdb:/var/lib/influxdb2
   
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
     restart: unless-stopped
+    volumes:
+      - grafana:/var/lib/grafana
 
   track:
     build: ./track
     restart: unless-stopped
+    environment:
+      INFLUXDB_TOKEN: "gpstrack"
+      INFLUXDB_URL: "http://10.0.0.105:8086"
+      INFLUXDB_ORG: "gpstrack"
+      INFLUXDB_BUCKET: "gpstrack"
+
+volumes:
+  influxdb:
+  grafana:
+

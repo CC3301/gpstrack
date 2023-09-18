@@ -7,14 +7,15 @@ from datetime import datetime
 from lib.influxdb import UpdateSender
 from lib.utils import Location
 
+import os
+
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("urllib3").setLevel(logging.FATAL)
 
-
-class Track2:
+class Track:
     def __init__(self, us: UpdateSender, gps_host: str) -> None:
-        self.us = us
-        self.gps_host = gps_host
+        self.us = UpdateSender()
+        self.gps_host = os.environ.get("GPSD_REMOTE_HOST")
         self.session = gps.gps(host=self.gps_host, mode=gps.WATCH_ENABLE)
 
     def watch_update(self) -> None:
@@ -48,7 +49,4 @@ class Track2:
 
 
 if __name__ == "__main__":
-    Track2(
-        us=UpdateSender("http://localhost:5000", "/tmp/gps_fallback_history.csv", 10),
-        gps_host="192.168.188.157",
-    ).watch_update()
+    Track().watch_update()

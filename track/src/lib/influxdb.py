@@ -1,20 +1,18 @@
 from .utils import Location
 
 import logging
+import os
 
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 
 class UpdateSender:
-    def __init__(self, server: str, fallback_file: str, cache_size: int) -> None:
-        self.server = server
-        self.fallback_file = fallback_file
-
-        self.bucket = "gpstrack"
-        self.org = "gpstrack"
-
-        self.INFLUX_TOKEN = "PBMq2IX4yiF_Ku5_1JRyQ5E189d-SuG8da9yTywl7ltcMVfxB6e623pLrxL7_ozhe1tmTSq_8hxY98W1_jiAPw=="
+    def __init__(self) -> None:
+        self.server = os.environ.get("INFLUXDB_URL")
+        self.bucket = os.environ.get("INFLUXDB_ORG")
+        self.org = os.environ.get("INFLUXDB_BUCKET")
+        self.INFLUX_TOKEN = os.environ.get("INFLUXDB_TOKEN")
 
         self.write_client = influxdb_client.InfluxDBClient(url="http://influxdb:8086", token=self.INFLUX_TOKEN, org=self.org)
         self.write_api = self.write_client.write_api(write_options=SYNCHRONOUS)
